@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merry Christmas & Happy New Year!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --snow-white: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fdf5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* The Main Festive Container */
+        .main-card {
+            background-color: white;
+            width: 90%;
+            max-width: 400px;
+            height: 550px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 25px;
+            border: 4px solid var(--christmas-red); /* Theme color */
+            /* Graph paper effect with light red lines */
+            background-image: linear-gradient(#ffebee 1px, transparent 1px), 
+                              linear-gradient(90deg, #ffebee 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .active { display: flex; }
+
+        h1 { font-family: 'Dancing Script', cursive; font-size: 2rem; color: var(--christmas-red); margin: 15px 0; }
+        p { color: #444; font-size: 1rem; margin-bottom: 20px; font-weight: 500; }
+
+        /* Step 1: Gift Box */
+        .gift-box { font-size: 100px; cursor: pointer; transition: transform 0.3s; margin-top: 50px; }
+        .tap-me {
+            background: var(--christmas-red); color: white; padding: 5px 12px;
+            border-radius: 20px; font-size: 0.8rem; font-weight: bold;
+            position: absolute; top: 120px; right: 80px; animation: float 2s infinite;
+        }
+
+        /* Step 3: Flipping Card Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .flip-card { width: 75px; height: 90px; perspective: 1000px; cursor: pointer; }
+        .flip-card-inner {
+            position: relative; width: 100%; height: 100%;
+            transition: transform 0.6s; transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); border: 2px solid white;
+        }
+        .card-front { background: var(--christmas-green); color: white; font-size: 1.5rem; }
+        .card-back { 
+            background: white; color: var(--christmas-red); transform: rotateY(180deg);
+            font-size: 0.65rem; font-weight: bold; padding: 5px; text-transform: uppercase;
+            border: 2px solid var(--christmas-red);
+        }
+
+        /* --- SCROLLING LETTER POPUP FIX --- */
+        .letter-popup {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            width: 90%;
+            max-height: 90%; /* Keeps it inside the screen */
+            background: white;
+            border-radius: 15px;
+            display: none;
+            flex-direction: column;
+            padding: 25px;
+            text-align: left;
+            z-index: 10;
+            border: 3px solid var(--christmas-red);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow-y: auto; /* ENABLE SCROLLING */
+        }
+        
+        /* Styled scrollbar for the letter */
+        .letter-popup::-webkit-scrollbar { width: 6px; }
+        .letter-popup::-webkit-scrollbar-thumb { background: var(--christmas-red); border-radius: 10px; }
+
+        .letter-popup p { font-size: 0.95rem; line-height: 1.6; margin-bottom: 15px; color: #333; }
+
+        /* Buttons */
+        .btn {
+            background: var(--christmas-green); color: white; border: none;
+            padding: 12px 35px; border-radius: 25px; font-weight: bold;
+            cursor: pointer; margin-top: auto; transition: 0.3s;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* Snowflakes */
+        .snowflake { position: fixed; top: -10px; color: white; user-select: none; z-index: -1; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(105vh); } }
+    </style>
+</head>
+<body>
+
+    <div class="main-card">
+        <div id="p1" class="screen active">
+            <h1>For someone special</h1>
+            <div class="tap-me">Tap me!</div>
+            <div class="gift-box" onclick="nextPage(1, 2)">🎁</div>
+        </div>
+
+        <div id="p2" class="screen">
+            <div style="font-size: 80px; margin-top: 30px;">☃️</div>
+            <h1 style="color: var(--christmas-green);">A Christmas Surprise...</h1>
+            <p>Just for you!</p>
+            <button class="btn" style="background: var(--christmas-red);" onclick="nextPage(2, 3)">Open it</button>
+        </div>
+
+        <div id="p3" class="screen">
+            <h1>The Truth is...</h1>
+            <p>I don't need a gift, because...</p>
+            <div class="card-grid" id="grid"></div>
+            <button class="btn" onclick="nextPage(3, 4)">Next</button>
+        </div>
+
+        <div id="p4" class="screen">
+            <h1>Merry Christmas!</h1>
+            <div style="font-size: 90px; margin-top: 10px;">🎅🛷</div>
+            <p>I have a letter for you</p>
+            <button class="btn" style="background: var(--christmas-red);" onclick="openLetter()">Tap to read ❤️</button>
+
+            <div id="letter" class="letter-popup">
+                <p>To my favorite person,</p>
+                <p>Merry Christmas, my love 🎄💖 This season feels different... warmer, softer, happier and that's all because of you.</p>
+                <p>You walked into my life so quietly, yet changed everything around me without even trying 💖</p>
+                <p>Sometimes I just pause and smile, thinking wow, she's really mine. It still feels unreal, but in the best way 😌 (Yes, I'm completely and hopelessly in love with you ❤️)</p>
+                <p>You feel like home to me. With you, I don't pretend, I don't try I just exist peacefully 🌪️ Every moment feels natural, safe, and beautifully calm.</p>
+                <p>This Christmas, I don't need gifts or wishes. All I want is to keep choosing you today, tomorrow, and always ❤️</p>
+                <p>I dream of a future where it's us, building a life, a family, and endless memories together 🥰 I love you more than winter mornings and Christmas lights combined ✨🎄</p>
+
+		<p>I’m always right here, holding your hand through everything.
+		<p>And trust me… I still have the biggest crush on you 😘<p>
+		<p>You’re not just my girlfriend
+you’re my world 🌍❤️<p>
+                <p style="text-align: center; font-weight: bold; color: var(--christmas-red); font-size: 1.2rem;">Merry Christmas! ❤️</p>
+                <button class="btn" style="width: 100%; margin-top: 10px;" onclick="nextPage(4, 5)">Next Surprise ⮕</button>
+            </div>
+        </div>
+
+        <div id="p5" class="screen">
+            <h1 style="color: var(--christmas-green);">But wait...</h1>
+            <p>Christmas is just the start!</p>
+            <div style="font-size: 80px; margin: 20px 0;">🎆✨</div>
+            <h1>Happy New Year 2026</h1>
+            <p>Let's make this year our best one yet. Can't wait for another 365 days of us! ✨🥂</p>
+            <div style="font-size: 40px;">🎁🥂💖</div>
+        </div>
+    </div>
+
+    <script>
+        const message = ["YOU", "ARE", "THE", "CUTEST", "GIFT", "I", "HAVE", "💖"];
+        const grid = document.getElementById('grid');
+
+        message.forEach(word => {
+            const card = document.createElement('div');
+            card.className = 'flip-card';
+            card.onclick = () => card.classList.toggle('flipped');
+            card.innerHTML = `<div class="flip-card-inner"><div class="card-front">🎄</div><div class="card-back">${word}</div></div>`;
+            grid.appendChild(card);
+        });
+
+        function nextPage(current, next) {
+            document.getElementById('p' + current).classList.remove('active');
+            document.getElementById('p' + next).classList.add('active');
+            if(next >= 4) startSnow();
+        }
+
+        function openLetter() {
+            const l = document.getElementById('letter');
+            l.style.display = (l.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function startSnow() {
+            setInterval(() => {
+                const snow = document.createElement('div');
+                snow.innerHTML = '❄';
+                snow.classList.add('snowflake');
+                snow.style.left = Math.random() * 100 + 'vw';
+                snow.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(snow);
+                setTimeout(() => snow.remove(), 5000);
+            }, 150);
+        }
+    </script>
+</body>
+</html>
